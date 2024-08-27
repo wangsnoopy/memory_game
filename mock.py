@@ -12,7 +12,7 @@ import random
 class Card:
     def __init__(self, value):
         self.value = value
-        self.flip = False
+        self.flipped = False
 
 class Player:
     def __init__(self, deck):
@@ -21,26 +21,18 @@ class Player:
 
     
     def flip_two_cards(self):
-        pick1 = self.pick_a_card()
-        pick2 = self.pick_a_card()
-        # get the same card
-        while pick1 == pick2:
-            pick1 = self.pick_a_card()
-            pick2 = self.pick_a_card()
+        # random pick two el from the list
+        first_card, second_card = self.picked_two_card()
         
-        # print(pick1.value, pick2.value)
         # get the pair, update
-        if pick1.value == pick2.value:
-            pick1.flip = True
-            pick2.flip = True
+        if first_card.value == second_card.value:
+            first_card.flipped = True
+            second_card.flipped = True
         # print([v.value for v in self.deck])
 
-    def all_cards_flip(self):
-        return all([card.flip for card in self.deck])
-
-    def pick_a_card(self):
-        pick_card = random.choice(self.deck)
-        return pick_card
+    def picked_two_card(self):
+        picked_two = random.sample(self.deck, 2)
+        return picked_two
 
         
 
@@ -54,11 +46,13 @@ class Game:
         self.player = Player(self.deck)
     
     def play_game(self):
-        round = self.player.round
-        while not self.player.all_cards_flip():
+        while not self.all_cards_flipped():
             self.player.flip_two_cards()
-            round += 1
-        return round
+            self.player.round += 1
+        return self.player.round
+
+    def all_cards_flipped(self):
+        return all([card.flipped for card in self.deck])
     
 
 
